@@ -1,0 +1,13 @@
+product_id,name,model,category,price,stock
+1,Laptop,XPS 13,Electronics,1200,30
+2,Smartphone,Galaxy S21,Electronics,800,50
+3,Coffee Maker,BrewMaster 3000,Home Appliances,100,20
+4,Headphones,QuietComfort 35,Electronics,150,100
+5,Blender,BlendPro 500,Home Appliances,80,40
+6,Smartwatch,Apple Watch Series 6,Electronics,400,70
+7,Tablet,iPad Pro,Electronics,900,60
+8,Vacuum Cleaner,Dyson V11,Home Appliances,500,25
+9,Television,Samsung QLED,Electronics,1500,15
+10,Camera,Canon EOS R5,Electronics,3500,10
+11,Novel: The Great Gatsby,Classic Edition,Books,15,50
+12,Cookbook: The Joy of Cooking,2020 Edition,Books,30,30
