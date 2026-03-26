@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    {% for team in teams %}
+        <a href="{{ url_for('team', teamname=team) }}">{{ team }}</a><br>
+    {% endfor %}
+</body>
+</html>

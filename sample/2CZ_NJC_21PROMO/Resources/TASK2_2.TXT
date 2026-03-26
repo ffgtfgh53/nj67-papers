@@ -1,0 +1,4 @@
+1617294632, Natural Language Processing in Action: Understanding analyzing and generating text with Python, 64.42
+9781617294433, Deep Learning with Python, 30.87
+1492032646, Hands-on Machine Learning with Scikit-Learn Keras and TensorFlow: Concepts Tools and Techniques to Build Intelligent Systems, 49.73
+1616558458, World of Warcraft: Chronicle Volume 1, 58.34

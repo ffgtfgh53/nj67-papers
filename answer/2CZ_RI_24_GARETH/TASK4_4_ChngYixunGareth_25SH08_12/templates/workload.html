@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Workload</title>
+    </head>
+    <body>
+        <table border="1">
+            <tr>
+                <th>Staff Name</th>
+                <th>Staff Role</th>
+                <th>Number of Appointments Handled</th>
+            </tr>
+            {% for data in dataset %}
+            <tr>
+                <td>{{data[0]}}</td>
+                <td>{{data[1]}}</td>
+                <td>{{data[2]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

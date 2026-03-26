@@ -1,0 +1,10 @@
+Australia,AUS
+Cambodia,KHM
+China,CHN
+Indonesia,IND
+South Korea,KOR
+Macao,MAC
+Malaysia,MAS
+New Zealand,NZL
+Singapore,SIN
+Taiwan,TPE

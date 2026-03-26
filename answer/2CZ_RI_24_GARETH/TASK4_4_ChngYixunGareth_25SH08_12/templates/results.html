@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Results</title>
+    </head>
+    <body>
+        {% if not dataset == "" %}
+        <table border="1">
+            <tr>
+                <th>Appointment ID</th>
+                <th>Patient ID</th>
+                <th>Patient Name</th>
+                <th>Staff ID</th>
+                <th>Staff Name</th>
+                <th>Appointment Date</th>
+                <th>Diagnosis</th>
+            </tr>
+            <tr>
+                {% for i in dataset %}
+                <td>{{i}}</td>
+                {% endfor %}
+            </tr>
+        </table>
+        {% else %}
+        <p> No Appointments Found</p>
+        {% endif %}
+    </body>
+
+</html>

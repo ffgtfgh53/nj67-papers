@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table{
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body >
+    <h1> {{teamdata[0][0]}} </h1>
+    <table >
+        <tr >
+            <th > Name </th>
+            <th> Event Name </th>
+            <th> Score </th>
+        </tr>
+        {% for member in teamdata %}
+        <tr>
+            <td > {{member[1]}} </td>
+            <td> {{member[2]}} </td>
+            <td> {{member[3]}} </td>
+        </tr>
+        {% endfor %}
+</body>
+</html>

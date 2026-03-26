@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>Teams</head>
+    <body>
+        <ul>
+            {% for i in dataset %}
+            <li><a href="/{{ i }}">{{i}}</a></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

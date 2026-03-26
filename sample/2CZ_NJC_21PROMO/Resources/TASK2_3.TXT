@@ -1,0 +1,9 @@
+1617294632, Natural Language Processing in Action: Understanding analyzing and generating text with Python, 64.42, EBOOK, 512 pages
+1492032646, Hands-on Machine Learning with Scikit-Learn Keras and TensorFlow: Concepts Tools and Techniques to Build Intelligent Systems, 49.73, EBOOK, 600 pages
+B00GU00MZW, World of Warcraft: Dawn of the Aspects, 68.95, AUDIOBOOK, 14 hours
+1616558458, World of Warcraft: Chronicle Volume 1, 58.34, EBOOK, 184 pages
+B017WPI9Z8, Harry Potter and the Deathly Hallows Book 7, 20.62, AUDIOBOOK, 24 hours
+9781617294433, Deep Learning with Python, 30.87, EBOOK, 384 pages
+9123510625, The Belgariad Series 5 Books Collection Set By David Eddings Pawn Of Prophecy, 124.13, EBOOK, 1434 pages
+B000V74GE8, The Seeress of Kell: The Malloreon Book 5, 13.32, AUDIOBOOK, 1500 hours
+B0013TRRS0, When Religion Becomes Evil: Five Warning Signs, 13.09, EBOOK, 304 pages
