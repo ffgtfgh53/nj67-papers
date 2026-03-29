@@ -41,6 +41,7 @@ def task1_1(c,n):
     else: 
         return -1
 
+# This function is a wrapper for the loose code originally in the file
 def task1_2():
     with open("./Resources/TASK1/TASK1DATA.txt") as file:
         message =file.read()
@@ -57,3 +58,4 @@ def task1_2():
         encrypted_message += encrypt
     with open("./Resources/TASK1/ENCRYPTEDMESSAGE.txt","w") as file:
         file.write(encrypted_message)
+    print(encrypted_message)
