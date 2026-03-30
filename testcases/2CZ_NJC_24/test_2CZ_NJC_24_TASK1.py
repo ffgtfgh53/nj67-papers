@@ -19,7 +19,7 @@ class TestTask1(unittest.TestCase):
         "Test task 1.1 with all valid values of 'c' and 'n'"
         for n in range(1, 27):
             for c in string.ascii_letters:
-                with self.subTest(n=n, c=c):
+                with self.subTest(n=n, c=c), patch('sys.stdout'):
                     self.assertEqual(task1_1(c, n), task1_1_ans(c, n))
     def test_space(self):
         "Test task 1,1 with a space"
@@ -27,7 +27,7 @@ class TestTask1(unittest.TestCase):
     def test_special_chars(self):
         "Test task 1.1 with invalid characters"
         for i in "!@#$%^&*()~`-=+_1234567890[]}{;',./?><}😂\x98":
-            with self.subTest(c=i):
+            with self.subTest(c=i), patch('sys.stdout'):
                 self.assertEqual(task1_1(i, 12), -1)
 
 from outfile_1 import task1_2
@@ -46,31 +46,31 @@ class TestTask2(unittest.TestCase):
         else:
             raise FileNotFoundError
 
-    @patch('sys.stdout') # To prevent printss
     @patch('builtins.open')
-    def test_default_use(self, mock_file, _unused_mock_stdout):
+    def test_default_use(self, mock_file):
         """Test task 1.2 with the file given"""
         mock_file.side_effect = self.mock_open
         self.input = mock_open(read_data="This is my secret message# that I &need to encrypt@")
-        task1_2()
+        with patch('sys.stdout'):
+            task1_2()
         self.assertEqual(self.output_buffer.getvalue().rstrip(), "Hrlg!lg!pm!vsmusd!aovgkjs#!hrdh!L!&qsog!dr!oqqbbdd@")
 
-    @patch('sys.stdout') # To prevent prints
     @patch('builtins.open')
-    def test_other_strings(self, mock_file, _unused_mock_stdout):
+    def test_other_strings(self, mock_file):
         "Test task 1.2 with another file of random characters"
         mock_file.side_effect = self.mock_open
         self.input = mock_open(read_data=";L]xF=5qQYo$Ba6]OLJ]}M(Cu^P=KF~1*O,6rE!d6< }UqN))tqt2F0aTL%Ip-dk+np7{}h$cR\\<sdL|p]_HtJT\"v&ve'y _.q#E")
-        task1_2()
+        with patch('sys.stdout'):
+            task1_2()
         self.assertEqual(self.output_buffer.getvalue().rstrip(), ";V]lP=5aTMy$Pk6]YOX]}A(Fi^S=UI~1*C,6fO!r6<!}XeX))dth2I0kWZ%Ld-gy+qd7{}r$qB\\<cgZ|s]_KhTW\"f&jo'm!_.a#S")
     
-    @patch('sys.stdout', new_callable=io.StringIO)
     @patch('builtins.open')
-    def test_print_file_content(self, mock_file, mock_stdout):
+    def test_print_file_content(self, mock_file):
         """\
         Test task 1.2 outputs content of file it writes
         """
         mock_file.side_effect = self.mock_open
         self.input = mock_open(read_data="This is my secret message# that I &need to encrypt@")
-        task1_2()
+        with patch('sys.stdout', new_callable=io.StringIO) as mock_stdout:
+            task1_2()
         self.assertIn(self.output_buffer.getvalue().rstrip(), mock_stdout.getvalue().rstrip())

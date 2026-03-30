@@ -3,7 +3,7 @@ import io
 import unittest
 import random
 import re
-from unittest.mock import patch, mock_open
+from unittest.mock import MagicMock, patch, mock_open
 from pathlib import Path
 from statistics import fmean, mean
 
@@ -32,7 +32,8 @@ class TestTask1(unittest.TestCase):
     def test_sort(self):
         "Test task 3.1 with random 100 random integers"
         arr = random.choices(range(1000), k=100)
-        self.assertEqual(task3_1(arr), task3_1_ans(arr))
+        with patch('sys.stdout'):
+            self.assertEqual(task3_1(arr), task3_1_ans(arr))
 
 from outfile_3 import task3_2
 
