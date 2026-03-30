@@ -5,22 +5,9 @@ import string
 
 from unittest.mock import patch, mock_open
 
-class NoMoreClosingFunction():
-    "Wrapper which turns obj.close to lambda and hides object behind ._obj"
-    def __init__(self, obj):
-        self._obj = obj
-    
-    def __getattr__(self, name):
-        if name == 'close':
-            return lambda: None
-        return getattr(self._obj, name)
-    def __enter__(self, *args, **kwargs):
-        # Don't check arguments of open()
-        return self._obj.__enter__()
-    def __exit__(self, *args):
-        pass
+from python_testcase_functions import NoMoreClosingFunction
 
-from .outfile import task1_1
+from outfile_1 import task1_1
 def task1_1_ans(c:str, n:int):
     if c == ' ': return '!'
     if not c.isalpha(): return -1
@@ -43,7 +30,7 @@ class TestTask1(unittest.TestCase):
             with self.subTest(c=i):
                 self.assertEqual(task1_1(i, 12), -1)
 
-from .outfile import task1_2
+from outfile_1 import task1_2
 
 class TestTask2(unittest.TestCase):
     def setUp(self):
@@ -59,7 +46,7 @@ class TestTask2(unittest.TestCase):
         else:
             raise FileNotFoundError
 
-    @patch('sys.stdout')
+    @patch('sys.stdout') # To prevent printss
     @patch('builtins.open')
     def test_default_use(self, mock_file, _unused_mock_stdout):
         """Test task 1.2 with the file given"""
@@ -68,7 +55,7 @@ class TestTask2(unittest.TestCase):
         task1_2()
         self.assertEqual(self.output_buffer.getvalue().rstrip(), "Hrlg!lg!pm!vsmusd!aovgkjs#!hrdh!L!&qsog!dr!oqqbbdd@")
 
-    @patch('sys.stdout')
+    @patch('sys.stdout') # To prevent prints
     @patch('builtins.open')
     def test_other_strings(self, mock_file, _unused_mock_stdout):
         "Test task 1.2 with another file of random characters"
