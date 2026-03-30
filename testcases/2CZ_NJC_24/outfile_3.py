@@ -52,7 +52,7 @@ def task3_2(filename_in,filename_out,no_of_sample):
         writer.writerows(random_sample_w)
     average = sum(random_sample)/no_of_sample
     counter = 0
-    for i in data:
+    for i in data+random_sample_w:
         if float(i[0]) < average:
             counter += 1
     return counter
