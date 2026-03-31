@@ -11,7 +11,7 @@ from python_testcase_functions import NoMoreClosingFunction
 
 resource_directory = Path(__file__).parent / 'Resources'
 
-from outfile_3 import task3_1
+from .outfile_3 import task3_1
 
 def task3_1_ans(values: list[int]):
     l = len(values)
@@ -35,7 +35,7 @@ class TestTask1(unittest.TestCase):
         with patch('sys.stdout'):
             self.assertEqual(task3_1(arr), task3_1_ans(arr))
 
-from outfile_3 import task3_2
+from .outfile_3 import task3_2
 
 class TestTask2(unittest.TestCase):
     def setUp(self):

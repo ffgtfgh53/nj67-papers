@@ -7,7 +7,7 @@ from unittest.mock import patch, mock_open
 
 from python_testcase_functions import NoMoreClosingFunction
 
-from outfile_1 import task1_1
+from .outfile_1 import task1_1
 def task1_1_ans(c:str, n:int):
     if c == ' ': return '!'
     if not c.isalpha(): return -1
@@ -30,7 +30,7 @@ class TestTask1(unittest.TestCase):
             with self.subTest(c=i), patch('sys.stdout'):
                 self.assertEqual(task1_1(i, 12), -1)
 
-from outfile_1 import task1_2
+from .outfile_1 import task1_2
 
 class TestTask2(unittest.TestCase):
     def setUp(self):
