@@ -46,14 +46,12 @@ class TestTask2(unittest.TestCase):
 
     def mock_open(self, filename, mode='r', *args, **kwargs):
         if re.match(fr"(.*/)?{self.filein_filename}", filename):
-            print("File accessed")
             return self.filein.return_value
         elif re.match(fr"(.*/)?{self.fileout_filename}", filename):
             return NoMoreClosingFunction(self.fileout)
         else:
             raise FileNotFoundError
 
-    # ??? Not equal for some reason
     def test_with_default_file(self):
         "Test task 3.2 with default input file"
         self.filein_filename = "TASK3FILE.txt"
@@ -65,19 +63,10 @@ class TestTask2(unittest.TestCase):
             counter = task3_2(self.filein_filename, self.fileout_filename, 700)
         data = []
         self.fileout.seek(0)
-        for n in self.fileout:
-            # with self.subTest("Test output file is only float seperated by newline"):
-            data.append(float(n))
+        data = [float(n) for n in self.fileout]
         avg = fmean(data)
         counter2 = 0
         for i in filein_data.splitlines():
             if float(i) < avg:
                 counter2 += 1
-        # print(
-        #     avg, 
-        #     counter, 
-        #     counter2, 
-        #     len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))),
-            
-        # )
         self.assertEqual(counter, len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))))
