@@ -1,11 +1,10 @@
-import csv
 import io
 import unittest
 import random
 import re
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import patch, mock_open
 from pathlib import Path
-from statistics import fmean, mean
+from statistics import fmean
 
 from python_testcase_functions import NoMoreClosingFunction
 
@@ -28,7 +27,7 @@ def task3_1_ans(values: list[int]):
         return res
     return merge_helper(task3_1(values[:l//2]), task3_1(values[l//2:]))
 
-class TestTask1(unittest.TestCase):
+class TestTask3_1(unittest.TestCase):
     def test_sort(self):
         "Test task 3.1 with random 100 random integers"
         arr = random.choices(range(1000), k=100)
@@ -37,7 +36,7 @@ class TestTask1(unittest.TestCase):
 
 from .outfile_3 import task3_2
 
-class TestTask2(unittest.TestCase):
+class TestTask3_2(unittest.TestCase):
     def setUp(self):
         self.filein = mock_open() #To define in every test case
         self.fileout = io.StringIO()
@@ -45,8 +44,9 @@ class TestTask2(unittest.TestCase):
         self.fileout_filename = '' #To define in every test case
 
     def mock_open(self, filename, mode='r', *args, **kwargs):
+        # Ignore args and kwargs
         if re.match(fr"(.*/)?{self.filein_filename}", filename):
-            return self.filein.return_value
+            return self.filein()
         elif re.match(fr"(.*/)?{self.fileout_filename}", filename):
             return NoMoreClosingFunction(self.fileout)
         else:
@@ -59,14 +59,62 @@ class TestTask2(unittest.TestCase):
         with open(resource_directory / self.filein_filename) as f:
             filein_data = f.read()
             self.filein = mock_open(read_data=filein_data)
-        with patch('builtins.open', side_effect=self.mock_open):
+        with patch('builtins.open', side_effect=self.mock_open), patch('sys.stdout'):
             counter = task3_2(self.filein_filename, self.fileout_filename, 700)
         data = []
         self.fileout.seek(0)
-        data = [float(n) for n in self.fileout]
+        try:
+            data = [float(n) for n in self.fileout]
+        except ValueError:
+            self.fail("Non-float found in sample or invalid file structure")
+        self.assertEqual(len(data), len(set(data)), msg="Repeat elements found in sample")
         avg = fmean(data)
         counter2 = 0
         for i in filein_data.splitlines():
             if float(i) < avg:
                 counter2 += 1
         self.assertEqual(counter, len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))))
+
+from .outfile_3 import task3_3
+
+class TestTask3_3(unittest.TestCase):
+    def setUp(self) -> None:
+        self.filein = mock_open()
+        self.fileout_notlower = io.StringIO()
+        self.fileout_lower = io.StringIO()
+    
+    def mock_open(self, filename, mode='r', *args, **kwargs):
+        if re.match(r"(.*/)?TASK3FILE.txt", filename):
+            return self.filein()
+        elif re.match(r"(.*/)?LOWER.TXT", filename):
+            if 'w' in mode:
+                del self.fileout_lower
+                self.fileout_lower = io.StringIO()
+            return NoMoreClosingFunction(self.fileout_lower)
+        elif re.match(r"(.*/)NOTLOWER.TXT", filename):
+            if 'w' in mode:
+                del self.fileout_notlower
+                self.fileout_notlower = io.StringIO()
+            return NoMoreClosingFunction(self.fileout_notlower)
+        else:
+            raise FileNotFoundError(filename)
+    
+    def test_with_default(self):
+        no_sample, alpha = 700, 5000
+        with open(resource_directory / "TASK3FILE.txt") as f:
+            filein_data = f.read()
+            self.filein = mock_open(read_data=filein_data)
+        with patch('builtins.open', side_effect=self.mock_open), patch("sys.stdout"):
+            task3_3()
+        lower, notlower = self.fileout_lower.getvalue(), self.fileout_notlower.getvalue()
+        self.assertTrue(lower and notlower, msg="LOWER.TXT and NOTLOWER.TXT cannot be empty")
+        try:
+            lower = [float(n.rstrip()) for n in lower.rstrip().splitlines()]
+            notlower = [float(n.rstrip()) for n in notlower.rstrip().splitlines()]
+        except ValueError:
+            self.fail("Non-float found in sample or invalid file structure")
+        self.assertEqual(len(lower), no_sample, "Incorrect number of samples in LOWER.TXT")
+        self.assertEqual(len(notlower), no_sample, "Incorrect number of samples in NOTLOWER.TXT")
+        lower_avg, notlower_avg = fmean(lower), fmean(notlower)
+        self.assertLess(len(list(filter(lambda a: float(a) < lower_avg, filein_data.splitlines()))), alpha)
+        self.assertGreater(len(list(filter(lambda a: float(a) < notlower_avg, filein_data.splitlines()))), alpha)

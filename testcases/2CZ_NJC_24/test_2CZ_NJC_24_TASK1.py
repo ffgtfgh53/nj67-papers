@@ -14,25 +14,22 @@ def task1_1_ans(c:str, n:int):
     res = ((ord(c) & 0b11111 )+ n) % 26 or 26
     return chr(res + 64) if c.isupper() else chr(res + 96)
 
-class TestTask1(unittest.TestCase):
+class TestTask1_1(unittest.TestCase):
     def test_all_c_n(self):
         "Test task 1.1 with all valid values of 'c' and 'n'"
         for n in range(1, 27):
             for c in string.ascii_letters:
                 with self.subTest(n=n, c=c), patch('sys.stdout'):
                     self.assertEqual(task1_1(c, n), task1_1_ans(c, n))
-    def test_space(self):
-        "Test task 1,1 with a space"
-        self.assertEqual(task1_1(' ', 13), '!')
     def test_special_chars(self):
-        "Test task 1.1 with invalid characters"
-        for i in "!@#$%^&*()~`-=+_1234567890[]}{;',./?><}😂\x98":
+        "Test task 1.1 with space and invalid characters"
+        for i in "!@#$%^&*()~`-=+_1234567890[]}{;',./?><}😂\x98 ":
             with self.subTest(c=i), patch('sys.stdout'):
-                self.assertEqual(task1_1(i, 12), -1)
+                self.assertEqual(task1_1(i, 12), task1_1_ans(i, 23))
 
 from .outfile_1 import task1_2
 
-class TestTask2(unittest.TestCase):
+class TestTask1_2(unittest.TestCase):
     def setUp(self):
         #Input to be overridden in each test case
         self.input = mock_open()
