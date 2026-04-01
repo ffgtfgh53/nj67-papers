@@ -1,40 +1,23 @@
 import io
-import unittest
 import random
 import re
+import unittest
 from unittest.mock import patch, mock_open
 from pathlib import Path
 from statistics import fmean
 
 from python_testcase_functions import NoMoreClosingFunction
 
+from .outfile_3 import task3_1, task3_2, task3_3
+
 resource_directory = Path(__file__).parent / 'Resources'
-
-from .outfile_3 import task3_1
-
-def task3_1_ans(values: list[int]):
-    l = len(values)
-    if l <= 1:
-        return values
-    def merge_helper(a, b):
-        res = []
-        while a and b:
-            if a[0] < b[0]:
-                res.append(a.pop(0))
-            else:
-                res.append(b.pop(0))
-        res.extend(a + b)
-        return res
-    return merge_helper(task3_1(values[:l//2]), task3_1(values[l//2:]))
 
 class TestTask3_1(unittest.TestCase):
     def test_sort(self):
         "Test task 3.1 with random 100 random integers"
         arr = random.choices(range(1000), k=100)
         with patch('sys.stdout'):
-            self.assertEqual(task3_1(arr), task3_1_ans(arr))
-
-from .outfile_3 import task3_2
+            self.assertEqual(task3_1(arr), sorted(arr))
 
 class TestTask3_2(unittest.TestCase):
     def setUp(self):
@@ -48,6 +31,9 @@ class TestTask3_2(unittest.TestCase):
         if re.match(fr"(.*/)?{self.filein_filename}", filename):
             return self.filein()
         elif re.match(fr"(.*/)?{self.fileout_filename}", filename):
+            if 'w' in mode:
+                del self.fileout
+                self.fileout = io.StringIO()
             return NoMoreClosingFunction(self.fileout)
         else:
             raise FileNotFoundError
@@ -61,7 +47,6 @@ class TestTask3_2(unittest.TestCase):
             self.filein = mock_open(read_data=filein_data)
         with patch('builtins.open', side_effect=self.mock_open), patch('sys.stdout'):
             counter = task3_2(self.filein_filename, self.fileout_filename, 700)
-        data = []
         self.fileout.seek(0)
         try:
             data = [float(n) for n in self.fileout]
@@ -69,16 +54,10 @@ class TestTask3_2(unittest.TestCase):
             self.fail("Non-float found in sample or invalid file structure")
         self.assertEqual(len(data), len(set(data)), msg="Repeat elements found in sample")
         avg = fmean(data)
-        counter2 = 0
-        for i in filein_data.splitlines():
-            if float(i) < avg:
-                counter2 += 1
         self.assertEqual(counter, len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))))
 
-from .outfile_3 import task3_3
-
 class TestTask3_3(unittest.TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.filein = mock_open()
         self.fileout_notlower = io.StringIO()
         self.fileout_lower = io.StringIO()
@@ -116,5 +95,13 @@ class TestTask3_3(unittest.TestCase):
         self.assertEqual(len(lower), no_sample, "Incorrect number of samples in LOWER.TXT")
         self.assertEqual(len(notlower), no_sample, "Incorrect number of samples in NOTLOWER.TXT")
         lower_avg, notlower_avg = fmean(lower), fmean(notlower)
-        self.assertLess(len(list(filter(lambda a: float(a) < lower_avg, filein_data.splitlines()))), alpha)
-        self.assertGreater(len(list(filter(lambda a: float(a) < notlower_avg, filein_data.splitlines()))), alpha)
+        self.assertLess(
+            len(list(filter(lambda a: float(a) < lower_avg, filein_data.splitlines()))), 
+            alpha, 
+            "LOWER.TXT is not lower-sufficient"
+        )
+        self.assertGreater(
+            len(list(filter(lambda a: float(a) < notlower_avg, filein_data.splitlines()))), 
+            alpha, 
+            "NOTLOWER.TXT is not lower-insufficient"
+        )
