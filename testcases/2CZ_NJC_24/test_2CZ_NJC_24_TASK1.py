@@ -1,13 +1,13 @@
 import io
 import re
-import unittest
 import string
-
+import unittest
 from unittest.mock import patch, mock_open
 
 from python_testcase_functions import NoMoreClosingFunction
 
-from .outfile_1 import task1_1
+from .outfile_1 import task1_1, task1_2
+
 def task1_1_ans(c:str, n:int):
     if c == ' ': return '!'
     if not c.isalpha(): return -1
@@ -27,8 +27,6 @@ class TestTask1_1(unittest.TestCase):
             with self.subTest(c=i), patch('sys.stdout'):
                 self.assertEqual(task1_1(i, 12), task1_1_ans(i, 23))
 
-from .outfile_1 import task1_2
-
 class TestTask1_2(unittest.TestCase):
     def setUp(self):
         #Input to be overridden in each test case
@@ -39,6 +37,11 @@ class TestTask1_2(unittest.TestCase):
         if re.match(r"(.*/)?TASK1DATA.txt", filename):
             return self.input.return_value
         elif 'w' in mode:
+            # Write mode overwrites file, similarly this overwrites self.output_buffer
+            del self.output_buffer
+            self.output_buffer = io.StringIO()
+            return NoMoreClosingFunction(self.output_buffer)
+        elif 'a' in mode:
             return NoMoreClosingFunction(self.output_buffer)
         else:
             raise FileNotFoundError
