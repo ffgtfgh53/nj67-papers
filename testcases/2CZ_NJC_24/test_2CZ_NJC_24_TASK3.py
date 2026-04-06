@@ -61,6 +61,8 @@ class TestTask3_3(unittest.TestCase):
         self.filein = mock_open()
         self.fileout_notlower = io.StringIO()
         self.fileout_lower = io.StringIO()
+        self.alpha = 5000
+        self.no_of_sample = 700
     
     def mock_open(self, filename, mode='r', *args, **kwargs):
         if re.match(r"(.*/)?TASK3FILE.txt", filename):
@@ -84,7 +86,7 @@ class TestTask3_3(unittest.TestCase):
             filein_data = f.read()
             self.filein = mock_open(read_data=filein_data)
         with patch('builtins.open', side_effect=self.mock_open), patch("sys.stdout"):
-            task3_3()
+            task3_3(self.no_of_sample, self.alpha)
         lower, notlower = self.fileout_lower.getvalue(), self.fileout_notlower.getvalue()
         self.assertTrue(lower and notlower, msg="LOWER.TXT and NOTLOWER.TXT cannot be empty")
         try:

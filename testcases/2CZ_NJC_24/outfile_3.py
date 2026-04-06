@@ -57,49 +57,43 @@ def task3_2(filename_in,filename_out,no_of_sample):
             counter += 1
     return counter
 
-def task3_3():
-    import csv
-    import random
+import csv
+import random
 
-    alpha = 5000
-    no_of_sample = 700
-
-
-    def task3_3(filename_in,no_of_sample,alpha):
-        check_lower = 0
-        check_notlower = 0
-        while not (check_lower and check_notlower):
-            folder_path = "./Resources/"
-            with open(folder_path+filename_in) as file:
-                data = list(csv.reader(file))
-            random_sample = []
-            random_sample_w = []
-            for i in range(no_of_sample):
-                random_idx = random.randint(0,len(data)-1)
-                # random_pt = data[random_idx]
-                random_pt = data.pop(random_idx)
-                random_sample.append(float(random_pt[0]))
-                random_sample_w.append(random_pt)
-            average = sum(random_sample)/no_of_sample
-            # print(average)
-            counter = 0
-            for i in data+random_sample_w:
-                if float(i[0]) < average:
-                    counter += 1
-            print(counter)
-            if counter < alpha:
-                # print("LOWER.TXT")
-                filename_out = "LOWER.TXT"
-                check_lower = 1
-            elif counter > alpha:
-                # print("NOTLOWER.TXT")
-                filename_out = "NOTLOWER.TXT"
-                check_notlower = 1
-            else:
-                continue
-            with open(folder_path+filename_out,"w",newline="") as file:
-                writer = csv.writer(file)
-                writer.writerows(random_sample_w)
-            # print(f"{check_lower} | {check_notlower}")
-        
-    task3_3("TASK3FILE.txt",no_of_sample,alpha)
+def task3_3(no_of_sample,alpha):
+    filename_in = "TASK3FILE.txt"
+    check_lower = 0
+    check_notlower = 0
+    while not (check_lower and check_notlower):
+        folder_path = "./Resources/"
+        with open(folder_path+filename_in) as file:
+            data = list(csv.reader(file))
+        random_sample = []
+        random_sample_w = []
+        for i in range(no_of_sample):
+            random_idx = random.randint(0,len(data)-1)
+            # random_pt = data[random_idx]
+            random_pt = data.pop(random_idx)
+            random_sample.append(float(random_pt[0]))
+            random_sample_w.append(random_pt)
+        average = sum(random_sample)/no_of_sample
+        # print(average)
+        counter = 0
+        for i in data+random_sample_w:
+            if float(i[0]) < average:
+                counter += 1
+        print(counter)
+        if counter < alpha:
+            # print("LOWER.TXT")
+            filename_out = "LOWER.TXT"
+            check_lower = 1
+        elif counter > alpha:
+            # print("NOTLOWER.TXT")
+            filename_out = "NOTLOWER.TXT"
+            check_notlower = 1
+        else:
+            continue
+        with open(folder_path+filename_out,"w",newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(random_sample_w)
+        # print(f"{check_lower} | {check_notlower}")

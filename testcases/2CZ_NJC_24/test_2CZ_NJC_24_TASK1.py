@@ -65,6 +65,6 @@ class TestTask1_2(unittest.TestCase):
         Test task 1.2 outputs content of file it writes
         """
         self.input = mock_open(read_data="This is my secret message# that I &need to encrypt@")
-        with patch('sys.stdout', new_callable=io.StringIO) as mock_stdout, patch('builtins.open', side_effect=self.mock_open):
-            task1_2()
-        self.assertIn(self.output_buffer.getvalue().rstrip(), mock_stdout.getvalue().rstrip())
+        with patch('sys.stdout'), patch('builtins.open', side_effect=self.mock_open):
+            result = task1_2()
+        self.assertIn(self.output_buffer.getvalue().rstrip(), result.rstrip())

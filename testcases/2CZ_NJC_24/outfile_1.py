@@ -58,4 +58,4 @@ def task1_2():
         encrypted_message += encrypt
     with open("./Resources/TASK1/ENCRYPTEDMESSAGE.txt","w") as file:
         file.write(encrypted_message)
-    print(encrypted_message)
+    return encrypted_message

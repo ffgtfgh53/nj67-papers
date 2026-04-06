@@ -1,12 +1,9 @@
 # type: ignore 
 # (disables linters such as pyright)
-def task4_1():
+def task4_1(outfile):
     #  Task 4.1
-
     import sqlite3
-
     # CREATE esports.db
-
     tables_sql = [
         """CREATE TABLE IF NOT EXISTS PEOPLE(
             PersonID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,7 +23,7 @@ def task4_1():
         )"""
     ]
 
-    conn = sqlite3.connect("./Resources/TASK4/esports.db")
+    conn = sqlite3.connect("./Resources/TASK4/"+outfile)
     for query in tables_sql:
         conn.execute(query)
     conn.commit()

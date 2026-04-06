@@ -12,7 +12,7 @@ class TestTask4_1(unittest.TestCase):
     def setUp(self):
         self.database_conn = sqlite3.connect(":memory:")
         with patch('sqlite3.connect', side_effect=self.mock_connect):
-            task4_1()
+            task4_1("esports.db")
 
     def mock_connect(self, database, *args, **kwargs):
         if re.match(r"(.*/)?esports.db", str(database)):
