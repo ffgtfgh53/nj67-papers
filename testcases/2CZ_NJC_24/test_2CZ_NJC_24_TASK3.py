@@ -13,13 +13,20 @@ from .outfile_3 import task3_1, task3_2, task3_3
 resource_directory = Path(__file__).parent / 'Resources'
 
 class TestTask3_1(unittest.TestCase):
+    longMessage = False
+    def test_with_given(self):
+        "Test task 3.1 with the case given"
+        arr = [0,0,4,4,5,7,18,25,56,98]
+        with patch('sys.stdout'):
+            self.assertEqual(task3_1([56,25,4,98,0,18,4,5,7,0]), arr, "task3_1() does not match the condition given")
     def test_sort(self):
         "Test task 3.1 with random 100 random integers"
         arr = random.choices(range(1000), k=100)
         with patch('sys.stdout'):
-            self.assertEqual(task3_1(arr), sorted(arr))
+            self.assertEqual(task3_1(arr), sorted(arr), "task3_1() does not properly sort randomly generated integers")
 
 class TestTask3_2(unittest.TestCase):
+    longMessage = False
     def setUp(self):
         self.filein = mock_open() #To define in every test case
         self.fileout = io.StringIO()
@@ -54,9 +61,10 @@ class TestTask3_2(unittest.TestCase):
             self.fail("Non-float found in sample or invalid file structure")
         self.assertEqual(len(data), len(set(data)), msg="Repeat elements found in sample")
         avg = fmean(data)
-        self.assertEqual(counter, len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))))
+        self.assertEqual(counter, len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))), "Counter value is incorrect based on output data")
 
 class TestTask3_3(unittest.TestCase):
+    longMessage = False
     def setUp(self):
         self.filein = mock_open()
         self.fileout_notlower = io.StringIO()
@@ -107,3 +115,7 @@ class TestTask3_3(unittest.TestCase):
             alpha, 
             "NOTLOWER.TXT is not lower-insufficient"
         )
+
+class TestFailure(unittest.TestCase):
+    def testFailure(self):
+        self.fail("Default failure with this message")

@@ -9,6 +9,7 @@ from python_testcase_functions import NoMoreClosingFunction, sqlite3_verify_tabl
 from .outfile_4 import task4_1, Person, Player, Staff
 
 class TestTask4_1(unittest.TestCase):
+    longMessage = False
     def setUp(self):
         self.database_conn = sqlite3.connect(":memory:")
         with patch('sqlite3.connect', side_effect=self.mock_connect):
@@ -58,6 +59,7 @@ class TestTask4_1(unittest.TestCase):
         sqlite3_verify_table(self, self.database_conn, "PLAYER", expected_player_table)
 
 class TestTask4_2(unittest.TestCase):
+    longMessage = False
     def test_class_inheritance(self):
         self.assertIn(Person, Player.mro(), "Player must inherit from Person")
         self.assertIn(Person, Staff.mro(), "Staff must inherit from Person")

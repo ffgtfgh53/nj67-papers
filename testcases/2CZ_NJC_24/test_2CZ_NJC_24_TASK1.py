@@ -15,6 +15,7 @@ def task1_1_ans(c:str, n:int):
     return chr(res + 64) if c.isupper() else chr(res + 96)
 
 class TestTask1_1(unittest.TestCase):
+    longMessage = False
     def test_all_c_n(self):
         "Test task 1.1 with all valid values of 'c' and 'n'"
         for n in range(1, 27):
@@ -28,6 +29,7 @@ class TestTask1_1(unittest.TestCase):
                 self.assertEqual(task1_1(i, 12), task1_1_ans(i, 23))
 
 class TestTask1_2(unittest.TestCase):
+    longMessage = False
     def setUp(self):
         #Input to be overridden in each test case
         self.input = mock_open()
