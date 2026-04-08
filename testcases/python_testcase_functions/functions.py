@@ -1,3 +1,5 @@
+from __future__ import annotations # python 3.8 support
+
 import io
 import sqlite3
 import unittest
