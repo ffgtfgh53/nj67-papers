@@ -4,10 +4,11 @@ import unittest
 from unittest.mock import patch
 from random import randint
 
-from python_testcase_functions import NoMoreClosingFunction, sqlite3_verify_table
+from python_testcase_functions import NoMoreClosingFunction, sqlite3_verify_table, SecureTest
 
 from .outfile_4 import task4_1, Person, Player, Staff
 
+@SecureTest(additional_modules=['sqlite3'])
 class TestTask4_1(unittest.TestCase):
     longMessage = False
     def setUp(self):
@@ -58,6 +59,7 @@ class TestTask4_1(unittest.TestCase):
         }
         sqlite3_verify_table(self, self.database_conn, "PLAYER", expected_player_table)
 
+@SecureTest()
 class TestTask4_2(unittest.TestCase):
     longMessage = False
     def test_class_inheritance(self):

@@ -4,7 +4,7 @@ import string
 import unittest
 from unittest.mock import patch, mock_open
 
-from python_testcase_functions import NoMoreClosingFunction
+from python_testcase_functions import NoMoreClosingFunction, SecureTest, SecureTestWithFileOpen
 
 from .outfile_1 import task1_1, task1_2
 
@@ -14,6 +14,7 @@ def task1_1_ans(c:str, n:int):
     res = ((ord(c) & 0b11111 )+ n) % 26 or 26
     return chr(res + 64) if c.isupper() else chr(res + 96)
 
+@SecureTest()
 class TestTask1_1(unittest.TestCase):
     longMessage = False
     def test_all_c_n(self):
@@ -28,6 +29,7 @@ class TestTask1_1(unittest.TestCase):
             with self.subTest(c=i), patch('sys.stdout'):
                 self.assertEqual(task1_1(i, 12), task1_1_ans(i, 23))
 
+@SecureTestWithFileOpen()
 class TestTask1_2(unittest.TestCase):
     longMessage = False
     def setUp(self):

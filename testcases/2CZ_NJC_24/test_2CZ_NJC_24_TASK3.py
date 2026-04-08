@@ -6,12 +6,13 @@ from unittest.mock import patch, mock_open
 from pathlib import Path
 from statistics import fmean
 
-from python_testcase_functions import NoMoreClosingFunction
+from python_testcase_functions import NoMoreClosingFunction, SecureTest, SecureTestWithFileOpen
 
 from .outfile_3 import task3_1, task3_2, task3_3
 
 resource_directory = Path(__file__).parent / 'Resources'
 
+@SecureTest()
 class TestTask3_1(unittest.TestCase):
     longMessage = False
     def test_with_given(self):
@@ -25,6 +26,7 @@ class TestTask3_1(unittest.TestCase):
         with patch('sys.stdout'):
             self.assertEqual(task3_1(arr), sorted(arr), "task3_1() does not properly sort randomly generated integers")
 
+@SecureTestWithFileOpen()
 class TestTask3_2(unittest.TestCase):
     longMessage = False
     def setUp(self):
@@ -63,6 +65,7 @@ class TestTask3_2(unittest.TestCase):
         avg = fmean(data)
         self.assertEqual(counter, len(list(filter(lambda a: float(a) < avg, filein_data.splitlines()))), "Counter value is incorrect based on output data")
 
+@SecureTestWithFileOpen()
 class TestTask3_3(unittest.TestCase):
     longMessage = False
     def setUp(self):
@@ -115,7 +118,3 @@ class TestTask3_3(unittest.TestCase):
             alpha, 
             "NOTLOWER.TXT is not lower-insufficient"
         )
-
-class TestFailure(unittest.TestCase):
-    def testFailure(self):
-        self.fail("Default failure with this message")
