@@ -1,7 +1,7 @@
 """Yo just saying this was fully AI Generated with 10% manual user editing (ok >30% now)
 
 DOES NOT WORK ON PYTHON 3.8 but works on 3.11 (idk why, some behavior changed ig)"""
-from __future__ import annotations
+from __future__ import annotations # atp idk what this is supporting if even 3.8 not supported
 
 from unittest.mock import patch, MagicMock
 from contextlib import ExitStack
@@ -27,34 +27,34 @@ class SecureTest:
     
     DANGEROUS_FUNCTIONS = {
         # File system
-        'builtins.open': PermissionError("File access denied"),
-        'os.remove': PermissionError("Delete denied"),
-        'os.rmdir': PermissionError("Delete denied"),
-        'os.unlink': PermissionError("Delete denied"),
-        'shutil.rmtree': PermissionError("Delete denied"),
-        'pathlib.Path.unlink': PermissionError("Delete denied"),
-        'pathlib.Path.write_text': PermissionError("Write denied"),
+        'builtins.open':            PermissionError("File access denied"),
+        'os.remove':                PermissionError("Delete denied"),
+        'os.rmdir':                 PermissionError("Delete denied"),
+        'os.unlink':                PermissionError("Delete denied"),
+        'shutil.rmtree':            PermissionError("Delete denied"),
+        'pathlib.Path.unlink':      PermissionError("Delete denied"),
+        'pathlib.Path.write_text':  PermissionError("Write denied"),
         'pathlib.Path.write_bytes': PermissionError("Write denied"),
 
         # Network
-        'socket.socket': PermissionError("Network access denied"),
-        'socket.create_connection': PermissionError("Network access denied"),
-        # 'requests.get': PermissionError("Network access denied"),
-        # 'requests.post': PermissionError("Network access denied"),
-        # 'requests.put': PermissionError("Network access denied"),
-        # 'requests.delete': PermissionError("Network access denied"), # somehow uncommenting leads to a bunch of ModuleNotFoundError
-        'urllib.request.urlopen': PermissionError("Network access denied"),
+        'socket.socket':              PermissionError("Network access denied"),
+        'socket.create_connection':   PermissionError("Network access denied"),
+        # 'requests.get':             PermissionError("Network access denied"),
+        # 'requests.post':            PermissionError("Network access denied"),
+        # 'requests.put':             PermissionError("Network access denied"),
+        # 'requests.delete':          PermissionError("Network access denied"), # somehow uncommenting leads to a bunch of ModuleNotFoundError
+        'urllib.request.urlopen':     PermissionError("Network access denied"),
         'http.client.HTTPConnection': PermissionError("Network access denied"),
         
         # Execution
-        'subprocess.run': PermissionError("Execution denied"),
+        'subprocess.run':   PermissionError("Execution denied"),
         'subprocess.Popen': PermissionError("Execution denied"),
-        'subprocess.call': PermissionError("Execution denied"),
-        'os.system': PermissionError("Execution denied"),
-        'os.popen': PermissionError("Execution denied"),
-        'builtins.eval': PermissionError("Execution denied"),
-        'builtins.exec': PermissionError("Execution denied"),
-        # 'builtins.compile': PermissionError("Compilation denied"),
+        'subprocess.call':  PermissionError("Execution denied"),
+        'os.system':        PermissionError("Execution denied"),
+        'os.popen':         PermissionError("Execution denied"),
+        'builtins.eval':    PermissionError("Execution denied"),
+        'builtins.exec':    PermissionError("Execution denied"),
+        'builtins.compile': PermissionError("Compilation denied"),
     }
     
     # Safe modules that untrusted code can import
@@ -63,9 +63,11 @@ class SecureTest:
         'collections', 'itertools', 're', 'string', 'random',
         'statistics', 'decimal', 'fractions', 'array', 'csv', 
         'base64', 'codecs', 'functools', 'operator', 'types',
+        #cpython modules
+        '_colorize', '__hello__'
     }
     
-    def __init__(self, additional_modules:list[str]=[], additional_builtins:list[str]=[], allowed_functions:list=[],
+    def __init__(self, additional_modules:list[str]=[], additional_builtins:list[str]=[], allowed_functions:list[str]=[],
                  block_environment:bool=True, block_globals:bool=True):
         """\
         Args:
@@ -106,7 +108,7 @@ class SecureTest:
         original_teardown = test_class.tearDown if hasattr(test_class, 'tearDown') else None
         decorator_self = self
         def new_setup(self):
-            # Call original setUp if it exists (i.e. setUp is exempt from patching, to allow mock_open(), etc)
+            # First call original setUp if it exists (i.e. setUp is exempt from patching, to allow mock_open(), etc)
             if original_setup:
                 original_setup(self)
             
@@ -151,13 +153,13 @@ class SecureTest:
                 if builtin_name in __builtins__ if isinstance(__builtins__, dict) else __builtins__.__dict__:
                     if builtin_name == '__import__': continue # since import is handled in safe_import
                     self._patch_stack.enter_context(
-                        patch.dict('builtins.__dict__', 
-                                  {builtin_name: MagicMock(
-                                      side_effect=PermissionError(
-                                          f"'{builtin_name}' is not allowed"
-                                      )
-                                  )},
-                                  clear=False)
+                        patch.dict(
+                            'builtins.__dict__', 
+                            {
+                                builtin_name: MagicMock(side_effect=PermissionError(f"'{builtin_name}' is not allowed"))
+                            },
+                            clear=False
+                        )
                     )
         
         def new_teardown(self):
@@ -178,7 +180,7 @@ class SecureTestWithFileOpen(SecureTest):
     """\
     SecureTest but also with builtins.open unpatched
     
-    Note that all unpatched functions/modules is the sole responisibilty of the implementor to ensure all functions have them patched
+    Note that all unpatched functions/modules are the sole responisibilty of the implementor to ensure that they are patched
     """
-    def __init__(self, additional_modules: list[str] = [], additional_builtins: list[str] = [], allowed_functions: list = [], block_environment: bool = True, block_globals: bool = True):
+    def __init__(self, additional_modules: list[str] = [], additional_builtins: list[str] = [], allowed_functions: list[str] = [], block_environment: bool = True, block_globals: bool = True):
         super().__init__(additional_modules, additional_builtins+['open'], allowed_functions+['builtins.open'], block_environment, block_globals)
