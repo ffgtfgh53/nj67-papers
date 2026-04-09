@@ -1,34 +1,17 @@
+from typing import TYPE_CHECKING
 import unittest
 
-from python_testcase_functions import SecureTest
+from RestrictedPython import compile_restricted
 
-@SecureTest(additional_modules=['sqlite3'])
-class TestDummy(unittest.TestCase):
-    def test_dummy(self):
-        import sqlite3 # Ok
-        import sys # PermissionError
+if TYPE_CHECKING:
+    from .outfile_test import task_malicous_imports
 
-@SecureTest()
+exec(compile_restricted("from .outfile_test import task_malicous_imports"))
+
+class TestSecurity(unittest.TestCase):
+    def test_imports(self):
+        exec(compile_restricted("task_malicous_imports(self)"))
+
 class TestTaskCrocodile(unittest.TestCase):
     def testFailure(self):
-        self.fail("Default failure with this message")
-
-@SecureTest()
-class TestTaskSkibidiSigma(unittest.TestCase):
-    def testError(self):
-        raise Exception("ERROR!!!")
-
-    def testErrorERROR(self):
-        with open("fauhwijsiwsj/dwedjoied") as f:
-            pass
-
-    def testExecError(self):
-        exec("print(2)")
-    
-    def testImportError(self):
-        import os
-        print(os.listdir()) 
-
-    def testNoImportError(self):
-        import math
-        self.assertEqual(math.sqrt(100), 10.)
+        self.fail("This message will and should always appear as a failure, safe to ignore")
