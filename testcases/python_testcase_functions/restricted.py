@@ -1,9 +1,14 @@
+import ast
 import sys
 import warnings
 
 from typing import Any
-from RestrictedPython import PrintCollector, compile_restricted
-from RestrictedPython.Guards import safe_builtins
+from RestrictedPython import PrintCollector, RestrictingNodeTransformer, compile_restricted, utility_builtins
+from RestrictedPython.Guards import guarded_iter_unpack_sequence, safe_builtins
+from RestrictedPython.Eval import default_guarded_getattr, default_guarded_getiter
+
+_SEAB_ALLOWED_MODULES = ['csv', 'datetime', 'math', 'random', 'sqlite3']
+_EXTRA_ALLOWED_MODULES = ['string', 'statistics', 'json', 're']
 
 class StdoutPrintCollector(PrintCollector):  
     """PrintCollector that writes to both stdout and internal buffer."""  
@@ -18,11 +23,41 @@ class StdoutPrintCollector(PrintCollector):
             del kwargs['file']  
         super()._call_print(*objects, **kwargs)
 
+class SimpleImportTransformer(RestrictingNodeTransformer):
+    # By AI
+    def visit_Import(self, node): #type: ignore
+        node = self.check_import_names(node)
+
+        # Transform imports for modules available in utility_builtins  
+        new_nodes = []  
+        for alias in node.names: #type: ignore
+            module_name = alias.name  
+              
+            # Check if this module is in utility_builtins  
+            if module_name in _SEAB_ALLOWED_MODULES + _EXTRA_ALLOWED_MODULES:  
+                # Transform: import math  
+                # To: math = utility_builtins['math']  
+                assign = ast.Assign(  
+                    targets=[ast.Name(alias.asname or module_name, ast.Store())],  
+                    value=ast.Subscript(  
+                        value=ast.Name('utility_builtins', ast.Load()),  
+                        slice=ast.Constant(module_name),  
+                        ctx=ast.Load()  
+                    )  
+                )  
+                new_nodes.append(ast.fix_missing_locations(assign))  
+            else:  
+                # For other modules, keep the original import (will fail at runtime)  
+                new_nodes.append(node)  
+        return new_nodes if len(new_nodes) == 1 else node  
+
 def load_user_functions(
     user_code_string: str, 
     allowed_function_names: list[str] | None = None, 
     block_print: bool = True, 
-    custom_globals: dict[str, Any] = {}):
+    custom_globals: dict[str, Any] = {},
+    extra_imports: dict[str, Any] = {},
+    ):
     """
     Safely load functions from user-provided code.
     
@@ -66,7 +101,8 @@ def load_user_functions(
         compiled = compile_restricted(
             user_code_string,
             filename='<user_code>',
-            mode='exec'
+            mode='exec',
+            policy=SimpleImportTransformer
         )
     
     # Check for compilation errors
@@ -78,15 +114,19 @@ def load_user_functions(
         '__builtins__': safe_builtins,
         '__name__': '__main__',
         '__metaclass__': type,
-        '_getiter_': iter,
-        '_iter_unpack_sequence_': iter,
+        '_getiter_': default_guarded_getiter,
+        '_iter_unpack_sequence_': guarded_iter_unpack_sequence,
         '_write_': lambda x: x,  # Allow writing to variables
         '_apply_': lambda f: f,  # Allow function calls
         '_print_': PrintCollector if block_print else StdoutPrintCollector,
-        '_getattr': getattr,
+        '_getattr_': default_guarded_getattr,
+        #For imports
+        'utility_builtins': utility_builtins | extra_imports,
+        'set': set,
+        'frozenset': set
     }
 
-    safe_globals.update(custom_globals)
+    safe_globals |= custom_globals
     original_safe_globals = safe_globals.copy()
     
     # Execute the user code
@@ -118,7 +158,6 @@ def load_user_functions(
         extracted_functions[name] = obj
     
     return extracted_functions
-
 
 # Example usage
 if __name__ == "__main__":
