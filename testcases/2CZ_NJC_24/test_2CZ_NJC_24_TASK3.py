@@ -1,10 +1,10 @@
 import io
+from pathlib import Path
 import random
 import re
-import unittest
-from unittest.mock import patch, mock_open
-from pathlib import Path
 from statistics import fmean
+import unittest
+from unittest.mock import mock_open
 
 from python_testcase_functions import NoMoreClosingFunction, load_user_functions
 
@@ -20,13 +20,11 @@ class TestTask3_1(unittest.TestCase):
     def test_with_given(self):
         "Test task 3.1 with the case given"
         arr = [0,0,4,4,5,7,18,25,56,98]
-        with patch('sys.stdout'):
-            self.assertEqual(self.task3_1([56,25,4,98,0,18,4,5,7,0]), arr, "task3_1() does not match the condition given")
+        self.assertEqual(self.task3_1([56,25,4,98,0,18,4,5,7,0]), arr, "task3_1() does not match the condition given")
     def test_sort(self):
         "Test task 3.1 with random 100 random integers"
         arr = random.choices(range(1000), k=100)
-        with patch('sys.stdout'):
-            self.assertEqual(self.task3_1(arr), sorted(arr), "task3_1() does not properly sort randomly generated integers")
+        self.assertEqual(self.task3_1(arr), sorted(arr), "task3_1() does not properly sort randomly generated integers")
 
 class TestTask3_2(unittest.TestCase):
     longMessage = False
@@ -65,8 +63,7 @@ class TestTask3_2(unittest.TestCase):
         with open(resource_directory / self.filein_filename) as f:
             filein_data = f.read()
             self.filein = mock_open(read_data=filein_data)
-        with patch('builtins.open', side_effect=self.mock_open), patch('sys.stdout'):
-            counter = self.func(self.filein_filename, self.fileout_filename, 700)
+        counter = self.func(self.filein_filename, self.fileout_filename, 700)
         self.fileout.seek(0)
         try:
             data = [float(n) for n in self.fileout]
@@ -115,8 +112,7 @@ class TestTask3_3(unittest.TestCase):
         with open(resource_directory / "TASK3FILE.txt") as f:
             filein_data = f.read()
             self.filein = mock_open(read_data=filein_data)
-        with patch('builtins.open', side_effect=self.mock_open), patch("sys.stdout"):
-            self.func(self.no_of_sample, self.alpha)
+        self.func(self.no_of_sample, self.alpha)
         lower, notlower = self.fileout_lower.getvalue(), self.fileout_notlower.getvalue()
         self.assertTrue(lower and notlower, msg="LOWER.TXT and NOTLOWER.TXT cannot be empty")
         try:
