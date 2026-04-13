@@ -1,20 +1,23 @@
 import re
 import sqlite3
 import unittest
-from unittest.mock import patch
+from pathlib import Path
 from random import randint
+from unittest.mock import patch
 
-from python_testcase_functions import NoMoreClosingFunction, sqlite3_verify_table, SecureTest
+from python_testcase_functions import NoMoreClosingFunction, sqlite3_verify_table, load_user_functions
 
-from .outfile_4 import task4_1, Person, Player, Staff
-
-@SecureTest(additional_modules=['sqlite3'])
 class TestTask4_1(unittest.TestCase):
     longMessage = False
     def setUp(self):
         self.database_conn = sqlite3.connect(":memory:")
         with patch('sqlite3.connect', side_effect=self.mock_connect):
-            task4_1("esports.db")
+            # TODO: Replace
+            self._funcs = load_user_functions(
+                '\n'.join(Path(__file__).with_name('outfile_4.py').read_text().split('\n')[:31]),
+                extra_imports={'sqlite3': sqlite3}) # To replace when actual string of code given
+            self.func = self.task3_1 = self._funcs['task4_1']
+            self.func("esports.db")
 
     def mock_connect(self, database, *args, **kwargs):
         if re.match(r"(.*/)?esports.db", str(database)):
@@ -59,12 +62,16 @@ class TestTask4_1(unittest.TestCase):
         }
         sqlite3_verify_table(self, self.database_conn, "PLAYER", expected_player_table)
 
-@SecureTest()
 class TestTask4_2(unittest.TestCase):
     longMessage = False
+    def setUp(self):
+        #TODO: Replace
+        self.classes = load_user_functions('\n'.join(Path(__file__).with_name('outfile_4.py').read_text().split('\n')[31:])) # To replace when actual string of code given
+        self.Person, self.Player, self.Staff = self.classes['Person'], self.classes['Player'], self.classes['Staff']
+
     def test_class_inheritance(self):
-        self.assertIn(Person, Player.mro(), "Player must inherit from Person")
-        self.assertIn(Person, Staff.mro(), "Staff must inherit from Person")
+        self.assertIn(self.Person, self.Player.mro(), "Player must inherit from Person")
+        self.assertIn(self.Person, self.Staff.mro(), "Staff must inherit from Person")
 
     def test_class_person(self):
         testcases = [
@@ -79,7 +86,7 @@ class TestTask4_2(unittest.TestCase):
         for kwargs, ans in testcases:
             with self.subTest("Test Person with arguments", **kwargs):
                 try:
-                    p = Person(**kwargs)
+                    p = self.Person(**kwargs)
                 except TypeError:
                     self.fail("Person.__init__() should accept correct keyword argumnets")
                 self.assertEqual(p.is_player(), 'Maybe')
@@ -100,7 +107,7 @@ class TestTask4_2(unittest.TestCase):
             score = randint(0, 5000)
             with self.subTest("Test Player with arguments", score=score, **kwargs):
                 try:
-                    p = Player(**kwargs, score=score)
+                    p = self.Player(**kwargs, score=score)
                 except ValueError:
                     self.fail("Person.__init__() should accept correct keyword arguments")
                 self.assertIsInstance(p.is_player(), bool, "is_player() should return a boolean")
@@ -120,7 +127,7 @@ class TestTask4_2(unittest.TestCase):
         for kwargs, ans in testcases:
             with self.subTest("Test staff with argumants", **kwargs):
                 try:
-                    s = Staff(**kwargs)
+                    s = self.Staff(**kwargs)
                 except ValueError:
                     self.fail("Staff.__init__() should accept correct keyword arguments")
                 self.assertIsInstance(s.is_staff(), bool, "is_staff() should return a boolean")

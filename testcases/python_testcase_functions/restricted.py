@@ -1,11 +1,26 @@
 import ast
 import sys
+from typing import Any
 import warnings
 
-from typing import Any
-from RestrictedPython import PrintCollector, RestrictingNodeTransformer, compile_restricted, utility_builtins, limited_builtins
-from RestrictedPython.Guards import guarded_iter_unpack_sequence, safe_builtins
-from RestrictedPython.Eval import default_guarded_getattr, default_guarded_getiter, default_guarded_getitem
+from RestrictedPython import (
+    PrintCollector,
+    RestrictingNodeTransformer,
+    compile_restricted,
+    utility_builtins,
+)
+from RestrictedPython.Eval import (
+    default_guarded_getattr,
+    default_guarded_getitem,
+    default_guarded_getiter,
+)
+from RestrictedPython.Guards import (
+    guarded_delattr,
+    guarded_iter_unpack_sequence,
+    guarded_setattr,
+    guarded_unpack_sequence,
+    safe_builtins,
+)
 
 _SEAB_ALLOWED_MODULES = ['csv', 'datetime', 'math', 'random', 'sqlite3']
 _EXTRA_ALLOWED_MODULES = ['string', 'statistics', 'json', 're']
@@ -25,6 +40,38 @@ class StdoutPrintCollector(PrintCollector):
 
 class SimpleImportTransformer(RestrictingNodeTransformer):
     # By AI
+    
+    # Whitelist of safe standard Python magic methods for H2 Computing syllabus
+    ALLOWED_MAGIC_METHODS = {
+        '__init__', '__str__', '__repr__', '__len__',
+        '__getitem__', '__setitem__', '__delitem__',
+        '__iter__', '__next__', '__contains__',
+        '__eq__', '__lt__', '__gt__', '__le__', '__ge__', '__ne__',
+        '__add__', '__sub__', '__mul__', '__truediv__', '__floordiv__',
+        '__int__', '__float__', '__bool__'
+    }
+    
+    def check_name(self, node, name, allow_magic_methods=True):
+        # Only allow explicitly whitelisted magic methods
+        if name in self.ALLOWED_MAGIC_METHODS:
+            return
+        # Run original security validation for all other names
+        super().check_name(node, name, allow_magic_methods)
+
+    def visit_Attribute(self, node):
+        """
+        Fix RestrictedPython bug: visit_Attribute runs check_name() on attribute names
+        This causes false positive errors when magic method names are accessed as attributes
+        """
+        node = self.node_contents_visit(node)
+        
+        # Skip name check completely for whitelisted magic method attribute names
+        if node.attr in self.ALLOWED_MAGIC_METHODS: #type: ignore
+            return node
+            
+        self.check_name(node, node.attr) # type: ignore
+        return node
+    
     def visit_Import(self, node): #type: ignore
         node = self.check_import_names(node)
 
@@ -155,10 +202,13 @@ def load_user_functions(
         '__name__': '__main__',
         '__metaclass__': type,
         '_getiter_': default_guarded_getiter,
+        '_unpack_sequence_': guarded_unpack_sequence,
         '_iter_unpack_sequence_': guarded_iter_unpack_sequence,
         '_write_': lambda x: x,  # Allow writing to variables
         '_apply_': lambda f: f,  # Allow function calls
         '_print_': PrintCollector if block_print else StdoutPrintCollector,
+        '_setattr_': guarded_setattr,
+        '_delattr_': guarded_delattr,
         '_getattr_': default_guarded_getattr,
         '_getitem_': default_guarded_getitem,
         '_inplacevar_': _inplacevar_, # In-place operations
@@ -173,6 +223,7 @@ def load_user_functions(
         'tuple': tuple,
         'range': range,
         'sum': sum,
+        'super': super,
     }
 
     globals_context = safe_globals | custom_globals
