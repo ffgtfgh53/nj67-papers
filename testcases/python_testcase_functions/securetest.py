@@ -5,7 +5,9 @@ from __future__ import annotations # atp idk what this is supporting if even 3.8
 
 from unittest.mock import patch, MagicMock
 from contextlib import ExitStack
+from warnings import deprecated
 
+@deprecated("SecureTest is depreciated and will be replaces by load_user_functions (using RestrictedPython)")
 class SecureTest:
     """\
     Class decorator that patches dangerous functions for testing untrusted code.
