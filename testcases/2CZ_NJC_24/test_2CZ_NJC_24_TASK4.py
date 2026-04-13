@@ -1,11 +1,15 @@
+from pathlib import Path
+from random import randint
 import re
 import sqlite3
 import unittest
-from pathlib import Path
-from random import randint
 from unittest.mock import patch
 
-from python_testcase_functions import NoMoreClosingFunction, sqlite3_verify_table, load_user_functions
+from python_testcase_functions import (
+    NoMoreClosingFunction,
+    load_user_functions,
+    sqlite3_verify_table,
+)
 
 class TestTask4_1(unittest.TestCase):
     longMessage = False

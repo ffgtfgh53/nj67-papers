@@ -1,11 +1,11 @@
-from pathlib import Path
 import json
+from pathlib import Path
 import re
-import statistics
 import sqlite3
+import statistics
 import textwrap
-from unittest.mock import patch, call
 import unittest
+from unittest.mock import call, patch
 
 from python_testcase_functions import load_user_functions
 
