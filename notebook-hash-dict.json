@@ -1,0 +1,92 @@
+{
+  "9afbef451dee995cd99efdc5af3bd59f": {
+    "no_subtask": 2,
+    "paper": "2CZ_NJC_24",
+    "task_no": 1
+  },
+  "b2ddb7cfde82db488d96f8a9aba41ddc": {
+    "no_subtask": 3,
+    "paper": "2CZ_NJC_24",
+    "task_no": 3
+  },
+  "d273c4bc603eafc37f032abf38992856": {
+    "no_subtask": 4,
+    "paper": "2CZ_NJC_24",
+    "task_no": 4
+  },
+  "54e344a43247c0de83b34a066fb1df21": {
+    "paper": "2CZ_NJC_21PROMOS",
+    "task_no": 2,
+    "no_subtask": 3
+  },
+  "c6d9e44f2ee203e6154c95f839bcca0f": {
+    "paper": "2CZ_NJC_21PROMOS",
+    "task_no": 1,
+    "no_subtask": 3
+  },
+  "a66bdb1bca3ef0b93964b1b050098c55": {
+    "paper": "2CZ_NJC_21PROMOS",
+    "task_no": 3,
+    "no_subtask": 3
+  },
+  "b2a63a6439132ff7a8c2e9222e3bb881": {
+    "paper": "2CZ_NJC_21PROMOS",
+    "task_no": 4,
+    "no_subtask": 3
+  },
+  "1a670e0157bdbc9215c8cfc6a9f917b5": {
+    "paper": "2CZ_RI_24",
+    "task_no": 2,
+    "no_subtask": 3
+  },
+  "d316539292074760cedff716ab63a95a": {
+    "no_subtask": 4,
+    "paper": "2CZ_RI_24",
+    "task_no": 4
+  },
+  "31198f038b2f5ae1b9837b03890d1e31": {
+    "paper": "2CZ_RI_24",
+    "task_no": 1,
+    "no_subtask": 4
+  },
+  "71031ecb2d72bc11415fea772ff0a3ea": {
+    "no_subtask": 5,
+    "paper": "2CZ_NJC_20PROMOS",
+    "task_no": 1
+  },
+  "2e3eeb952d463f41b14c9343f6aff5b8": {
+    "paper": "2CZ_NJC_20PROMOS",
+    "task_no": 3,
+    "no_subtask": 7
+  },
+  "7612ef0b5f92d74701c52f2e61323059": {
+    "paper": "2CZ_NJC_20PROMOS",
+    "task_no": 4,
+    "no_subtask": 4
+  },
+  "45de565b66009c2d0203199f006ceaca": {
+    "no_subtask": 2,
+    "paper": "2CZ_NJC_20PROMOS",
+    "task_no": 2
+  },
+  "a42575a940f370a408c76b053f80947e": {
+    "paper": "2CZ_NJC_2022PROMOS",
+    "task_no": 4,
+    "no_subtask": 4
+  },
+  "4d42c1bbb38d8f671519049083c45156": {
+    "paper": "2CZ_NJC_2022PROMOS",
+    "task_no": 2,
+    "no_subtask": 5
+  },
+  "7b24174fb11b50da73926833b5be0eb0": {
+    "paper": "2CZ_NJC_2022PROMOS",
+    "task_no": 3,
+    "no_subtask": 3
+  },
+  "895a8573df5b16c969b3aa5bfc1e1e4a": {
+    "paper": "2CZ_NJC_2022PROMOS",
+    "task_no": 1,
+    "no_subtask": 6
+  }
+}
