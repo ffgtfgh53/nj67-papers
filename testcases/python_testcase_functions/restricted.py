@@ -138,6 +138,7 @@ def load_user_functions(
     block_print: bool = True, 
     custom_globals: dict[str, Any] = {},
     extra_imports: dict[str, Any] = {},
+    extract_everything: bool = False,
     ):
     """
     Safely load functions from user-provided code.
@@ -147,6 +148,7 @@ def load_user_functions(
         allowed_function_names: List of function names to allow (whitelist)
         block_print: Whether print statements should be blocked from printing to stdout
         custom_globals: Custom globals for builtins (e.g. to patch certain functions like builtins.open)
+        extract_everything: Whether to extract everything and not just functions and classes
     
     Returns:
         dict of allowed functions {'name': func}
@@ -176,6 +178,7 @@ def load_user_functions(
 
     Useful features:
         block_print=False to print to stdout so you can mock a sys.stdout object with unittest.mock
+        extract_everything=True to resue global environment for subsequent subtasks
     """
     
     # Compile the user code with restrictions
@@ -235,6 +238,9 @@ def load_user_functions(
     except Exception as e:
         raise RuntimeError(f"Error executing user code: {e}")
     
+    if extract_everything:
+        return globals_context
+
     # Extract only needed functions
     extracted_functions = {}
     
