@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Appointment</title>
+</head>
+<body>
+    <h1>Search for Appointment</h1>
+        <form action="{{ url_for('search_appointment') }}" method="POST">
+            <label for="patient_name">Patient Name:</label>
+            <input type="text" id="patient_name" name="patient_name" placeholder="Enter patient name" required>
+            <br><br>
+            <label for="appointment_date">Appointment Date:</label>
+            <input type="text" id="appointment_date" name="appointment_date" required>
+            <br><br>
+            <input type="submit" value="Search">
+        </form>
+
+    {% if appointments %}
+        <h2>Search Results</h2>
+        <table border = 1>
+            <thead>
+                <tr>
+                    <th>Appointment ID</th>
+					<th>Patient ID</th>
+                    <th>Patient Name</th>
+					<th>Staff ID</th>
+                    <th>Staff Name</th>
+                    <th>Appointment Date</th>
+                    <th>Diagnosis</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment[0] }}</td>
+                        <td>{{ appointment[1] }}</td>
+                        <td>{{ appointment[2] }}</td>
+                        <td>{{ appointment[3] }}</td>
+                        <td>{{ appointment[4] }}</td>
+                        <td>{{ appointment[5] }}</td>
+                        <td>{{ appointment[6] }}</td>
+						
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">No appointments found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+</body>
+</html>
