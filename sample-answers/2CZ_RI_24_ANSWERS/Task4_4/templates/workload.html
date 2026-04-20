@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List Staff Workload</title>
+</head>
+<body>
+    <h1>List Staff Workload</h1>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+
+    {% if workload %}
+        <table border=1>
+            <thead>
+                <tr>
+                    <th>Staff Name</th>
+                    <th>Role</th>
+                    <th>Number of Appointments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in workload %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No performance data available.</p>
+    {% endif %}
+</body>
+</html>
