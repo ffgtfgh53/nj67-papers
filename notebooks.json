@@ -1,6 +1,5 @@
-[
-    {
-        "name": "2CZ_NJC_24",
+{   
+    "2CZ_NJC_24": {
         "no_task": 4,
         "tasks": [
             "9afbef451dee995cd99efdc5af3bd59f",
@@ -9,4 +8,4 @@
             "d273c4bc603eafc37f032abf38992856"
         ]
     }
-]
+}
