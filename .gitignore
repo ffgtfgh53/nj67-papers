@@ -1,1 +1,5 @@
+# Python compiled bytecode
 **__pycache__/
+
+# For temporary zip files used as testing to upload to nj67
+**/*.zip
